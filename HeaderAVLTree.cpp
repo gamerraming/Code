@@ -1,5 +1,5 @@
 //Code
-//Cac ham AVL Tree
+//Cấu trúc cây AVL và Các hàm hổ trợ
 // thiếu thì bổ sung
 typedef int TYPEINFO;
 struct NodeAVL
