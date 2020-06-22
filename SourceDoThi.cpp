@@ -1,5 +1,3 @@
-#include "thuvien_bai4.h"
-
 //Xuất đỉnh v ra màn hình
 void printVertex(VERTEX v)
 {
