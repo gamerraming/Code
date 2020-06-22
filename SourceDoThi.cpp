@@ -1,3 +1,5 @@
+#include "thuvien_bai4.h"
+
 //Xuất đỉnh v ra màn hình
 void printVertex(VERTEX v)
 {
@@ -172,7 +174,32 @@ void NhapDSCanh(ArrayEdge &ae)
 	}
 }
 //cho dinh va cac canh tra ve ma tran ke
-AdjacencyMatrix TraVeMaTranKe(int dinh, ArrayEdge e)
+AdjacencyMatrix TraVeMaTranKeVoHuong(int dinh, ArrayEdge e)
+{
+	AdjacencyMatrix am;
+	am.n = dinh;
+	for (int i = 0; i < dinh; i++)
+		for (int j = 0; j < dinh; j++)
+			am.mt[i][j] = 0;
+	for (int i = 0; i < e.count; i++)
+	{
+		am.mt[e.ds[i].org][e.ds[i].des] = e.ds[i].wei;
+		am.mt[e.ds[i].des][e.ds[i].org] = e.ds[i].wei;
+	}
+	return am;
+}
+//xuat ma tran ke
+void xuatMaTran(AdjacencyMatrix mt)
+{
+	for (int i = 0; i < mt.n; i++)
+	{
+		for (int j = 0; j < mt.n; j++)
+			cout << mt.mt[i][j] << " ";
+		cout << endl;
+	}
+}
+//cho dinh va cac canh tra ve ma tran ke (do thi co huong)
+AdjacencyMatrix TraVeMaTranKeCoHuong(int dinh, ArrayEdge e)
 {
 	AdjacencyMatrix am;
 	am.n = dinh;
@@ -183,13 +210,65 @@ AdjacencyMatrix TraVeMaTranKe(int dinh, ArrayEdge e)
 		am.mt[e.ds[i].org][e.ds[i].des] = e.ds[i].wei;
 	return am;
 }
-//xuat ma tran ke
-void xuatMaTran(AdjacencyMatrix mt)
+//tim dinh ke dinh u co trong so nho nhat
+VERTEX timDinhKeUCoTSMin(AdjacencyMatrix mt, VERTEX u)
 {
+	int tamluu[MAXV];
+	int pt = 0;
 	for (int i = 0; i < mt.n; i++)
 	{
-		for (int j = 0; j < mt.n; j++)
-			cout << mt.mt[i][j] << "\t";
-		cout << endl;
+		if (mt.mt[u][i] != 0)
+		{
+			tamluu[pt] = mt.mt[u][i];
+			pt++;
+		}
 	}
+	VERTEX MIN = tamluu[0];
+	for (int i = 1; i < pt; i++)
+	{
+		if (MIN > tamluu[i])
+			MIN = tamluu[i];
+	}
+	return MIN;
+}
+//cho ma tran ke G tao ra ma tran G' bang cach doi huong tat ca cac canh cua G
+AdjacencyMatrix DoiHuongMaTranKe(AdjacencyMatrix g)
+{
+	AdjacencyMatrix mtDH;
+	mtDH.n = g.n;
+	for (int i = 0; i < mtDH.n; i++)
+		for (int j = 0; j < mtDH.n; j++)
+			mtDH.mt[i][j] = 0;
+	for (int i = 0; i < g.n; i++)
+		for (int j = 0; j < g.n; j++)
+			mtDH.mt[i][j] = g.mt[j][i];
+	return mtDH;
+}
+//Cac ham ho tro QUEUE
+void InitQueue(Queue &q)
+{
+	q.n = 0;
+}
+void PushQueue(Queue &q, TYPEINFO a)
+{
+	if (IsFullQueue(q) == 1)
+		cout << "\nHang doi da day !!!" << endl;
+	else
+		q.ds[q.n] = a;
+		q.n++;
+}
+void PopQueue(Queue &q, TYPEINFO &a)
+{
+	a = q.ds[0];
+	for (int i = 0; i < q.n - 1; i++)
+		q.ds[i] = q.ds[i + 1];
+	q.n--;
+}
+int IsEmptyQueue(Queue q)
+{
+	return q.n == 0 ? 1 : 0;
+}
+int IsFullQueue(Queue q)
+{
+	return q.n == MAXV - 1 ? 1 : 0;
 }
